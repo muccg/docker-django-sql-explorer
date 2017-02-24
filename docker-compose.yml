@@ -1,0 +1,29 @@
+version: '2'
+services:
+
+  sqlexplorer:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        http_proxy:
+    image: muccg/django-sql-explorer
+    environment:
+      - DEBUG=1
+      - PRODUCTION=0
+    volumes:
+      - .:/app
+
+  runserver:
+    extends:
+      service: sqlexplorer
+    command: runserver
+    ports:
+      - "8000"
+
+  uwsgi:
+    extends:
+      service: sqlexplorer
+    command: uwsgi
+    ports:
+      - "9000"
